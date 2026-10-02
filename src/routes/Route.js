@@ -4,5 +4,7 @@ import { ChargesController } from "../controllers/charges/Charges.controller.js"
 
 const Route = express.Router();
 
-Route.post("/charges", ChargesController.CreateChargeReference)
+Route.post("/charges", ChargesController.CreateChargeReference);
+Route.post("/charges/gpo", ChargesController.CreateChargeReferenceGpo);
+
 export { Route }

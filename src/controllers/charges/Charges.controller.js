@@ -99,11 +99,12 @@ export class ChargesController {
   }
 
 
+
   ///// pagamento por numero de telefone 
-  static async CreateChargeReference(req, res) {
+  static async CreateChargeReferenceGpo(req, res) {
     try {
-      const { amount, description } = req.body;
-      if (!amount || amount <= 0) {
+      const { amount, description, telefone } = req.body;
+      if (!amount || amount <= 0 || !telefone) {
         return res.status(400).json({
           success: false,
           message: "Valor inválido."
@@ -121,7 +122,7 @@ export class ChargesController {
       )
         .toString()
         .padStart(13, "0")}`;
-      const paymentMethod = process.env.REF_PAYMENT;
+      const paymentMethod = process.env.GPO_PAYMENT;
       const options = {
         MerchantIdentifier: process.env.ACOUNT_NUMBER,
         ApiKey: process.env.API_KEY
@@ -135,6 +136,9 @@ export class ChargesController {
         description,
         merchantTransactionId,
         paymentMethod,
+        paymentInfo: {
+          phoneNumber: telefone,
+        },
         options,
       }
 
@@ -156,15 +160,21 @@ export class ChargesController {
         });
         return;
       }
-
-      const example = await getReference.json();
+      const { id, responseStatus: {
+        successful,
+        status,
+        code,
+        source,
+      } } = await getReference.json();
 
       res.status(200).json({
         success: successful,
-        message: "Referencia Criada com sucesso!",
-        example,
+        message: "Pagamento solicitado com sucesso!",
         result: {
-
+          transacao_id: id,
+          status_transacao: status,
+          codigo_movimento: code,
+          tipo_pagamento: source,
         }
       })
 
