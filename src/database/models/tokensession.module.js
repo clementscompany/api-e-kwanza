@@ -1,4 +1,4 @@
-import { DB } from "../../config/config"
+import { DB } from "../../config/config.js"
 
 export class TokenSessionModule {
   static deleteSession() {

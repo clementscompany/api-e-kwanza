@@ -7,9 +7,9 @@ import { createDatabase } from "./src/database/db.js";
 import { TokenController } from "./src/controllers/token/token.controller.js";
 
 dotenv.config();
-
 const app = express();
 const port = 5001;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
@@ -31,7 +31,7 @@ app.use("/api/v1", Route);
 app.listen(port, () => { console.log("http://localhost:5001"); })
 
 //// ccorn
-cron.schedule("*/5 * * * * *", () => {
+cron.schedule("*/10 * * * * *", () => {
   TokenController.RefreshTokenAsync();
 });
 
